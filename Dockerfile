@@ -14,6 +14,7 @@ RUN apt-get update && \
 RUN useradd -ms /bin/bash -G sudo docker && mkdir /source && chown docker /source
 
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+COPY local-build.sh /bin/
 
 USER docker
 
