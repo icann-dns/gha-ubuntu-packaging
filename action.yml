@@ -20,7 +20,7 @@ inputs:
   build_script:
     description: 'an alternate build script to use.  Use `/source` as the root of your repo'
     required: false
-    default: /bin/local-build.sh
+    default: '../bin/local-build.sh'
   result_dir:
     description: 'The path should be relative to your workspace'
     required: false
