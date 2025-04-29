@@ -18,9 +18,9 @@ inputs:
     required: false
     default: 'amd64'
   build_script:
-    description: 'an alternate build script to use.  Use `/source` as the root of your repo'
+    description: 'an alternate build script to use.  Use `paths relative to your source` as the root of your repo'
     required: false
-    default: '../bin/local-build.sh'
+    default: '../local-build.sh'
   result_dir:
     description: 'The path should be relative to your workspace'
     required: false
@@ -70,14 +70,15 @@ runs:
     - name: Build package
       shell: bash
       run: |
-        docker run --entrypoint="/source/${{inputs.build_script}}" \
+        docker run --entrypoint="/build/source/${{inputs.build_script}}" \
           --platform="${{inputs.platform}}" \
           -v "/var/run/docker.sock":"/var/run/docker.sock" \
-          -v "${{github.workspace}}":/source \
-          -e DEBEMAIL -e DEB_FULLNAME -e GITHUB_REF_NAME \
-          --workdir /source "${IMAGE_NAME}"
+          -v "${{github.workspace}}":/build/source \
+          -e DEBEMAIL -e DEB_FULLNAME -e GITHUB_REF_NAME -e RESULT_DIR \
+          --workdir /build/source "${IMAGE_NAME}"
       working-directory: ${{github.workspace}}
       env:
         DEB_FULLNAME: "${{inputs.deb_fullname}}"
         DEBEMAIL: "${{inputs.deb_email}}"
+        RESULT_DIR: "${{inputs.result_dir}}"
         IMAGE_NAME: "${{github.actor}}/icann-dns-${{inputs.flavor}}-${{inputs.dist}}-${{inputs.platform}}"

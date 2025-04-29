@@ -11,10 +11,10 @@ ENV DEBCONF_NOWARNINGS=yes
 RUN apt-get update && \
   apt-get install -y build-essential devscripts equivs quilt dh-make automake wget software-properties-common python3-setuptools debhelper dpkg-dev python3-dev python3-pip sudo
 
-RUN useradd -ms /bin/bash -G sudo docker && mkdir /source && chown docker /source
+RUN useradd -ms /bin/bash -G sudo docker && mkdir -p /build/source && chown -R docker /build
 
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-COPY local-build.sh /bin/
+COPY local-build.sh /build/
 
 USER docker
 
