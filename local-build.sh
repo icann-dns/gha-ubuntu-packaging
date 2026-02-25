@@ -2,9 +2,13 @@
 set -x
 sudo chown -R "$(whoami)" "${PWD}/"
 version=$(awk 'NR==1{gsub(/[()]/,"",$2); print $2 }' debian/changelog)
+# Install go, needed for atlas_exporter
+sudo add-apt-repository -y ppa:longsleep/golang-backports
+sudo apt -y update
 source /etc/lsb-release
-dch --distribution "${DISTRIB_CODENAME}" --newversion "${version}+ubuntu${DISTRIB_RELEASE}" "Github build of ${DISTRIB_CODENAME} packages"
+dch --distribution "${DISTRIB_CODENAME}" --newversion "${version}-1ubuntu${DISTRIB_RELEASE}" "Github build of ${DISTRIB_CODENAME} packages"
 sudo uscan --verbose --force-download --download-current-version
+ls -ls ../
 sudo mk-build-deps --remove --install --tool="apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes" debian/control
 sudo rm -rf ./*deps*.{deb,buildinfo,changes}
 dpkg-buildpackage -b -us -uc
